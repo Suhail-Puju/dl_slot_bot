@@ -23,7 +23,11 @@ captcha_step = 0  # 1 = first captcha, 2 = second captcha
 def setup_driver():
     chrome_options = Options()
     chrome_options.add_argument("--disable-notifications")
+    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
     return webdriver.Chrome(options=chrome_options)
+
 
 # === Capture CAPTCHA via Screenshot ===
 def capture_captcha(driver, captcha_element):
@@ -127,7 +131,7 @@ async def handle_captcha(update: Update, context: ContextTypes.DEFAULT_TYPE):
             driver.find_element(By.ID, "prcdbook").click()
 
             # Step 12: Check for slot availability message
-            time.sleep(5)
+            time.sleep(1)
             try:
                 msg = driver.find_element(By.XPATH, "//*[contains(text(), 'Slots are not Available')]")
                 await context.bot.send_message(chat_id=user_chat_id, text=f"❌ {msg.text}")
